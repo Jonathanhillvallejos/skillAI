@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
           },
         ],
         external_reference: order.id,
-        notification_url: isProduction ? `${baseUrl}/api/webhooks/mercadopago` : undefined,
         back_urls: {
           success: `${baseUrl}/resultado/${order.id}?status=success`,
           failure: `${baseUrl}/resultado/${order.id}?status=failure`,
