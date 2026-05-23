@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
     const isProduction = !baseUrl.includes("localhost");
 
     const preference = await new Preference(mp).create({
