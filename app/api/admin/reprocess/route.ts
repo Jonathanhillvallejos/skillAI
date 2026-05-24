@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { executeSkill } from "@/lib/claude-skills";
 import { SkillId } from "@/lib/skills";
 
+export const maxDuration = 300;
+
 export async function POST(req: NextRequest) {
   const secret = req.headers.get("x-admin-secret");
   if (!secret || secret !== process.env.MP_ACCESS_TOKEN) {
@@ -17,7 +19,7 @@ export async function POST(req: NextRequest) {
       order = await prisma.order.findUnique({ where: { id: orderId } });
     } else if (email) {
       order = await prisma.order.findFirst({
-        where: { email, status: "pending" },
+        where: { email },
         orderBy: { createdAt: "desc" },
       });
     }
@@ -35,28 +37,24 @@ export async function POST(req: NextRequest) {
       data: { status: "paid" },
     });
 
-    // Fire and forget — process async
-    (async () => {
-      try {
-        const result = await executeSkill(
-          order.skillId as SkillId,
-          order.inputData as Record<string, string>
-        );
-        await prisma.order.update({
-          where: { id: order.id },
-          data: { status: "completed", result },
-        });
-        console.log("[admin/reprocess] completed", order.id);
-      } catch (err) {
-        console.error("[admin/reprocess] failed", err);
-        await prisma.order.update({
-          where: { id: order.id },
-          data: { status: "failed" },
-        });
-      }
-    })();
-
-    return NextResponse.json({ ok: true, orderId: order.id, skillId: order.skillId });
+    try {
+      const result = await executeSkill(
+        order.skillId as SkillId,
+        order.inputData as Record<string, string>
+      );
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { status: "completed", result },
+      });
+      return NextResponse.json({ ok: true, orderId: order.id, skillId: order.skillId, status: "completed" });
+    } catch (err) {
+      console.error("[admin/reprocess] skill failed", err);
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { status: "failed" },
+      });
+      return NextResponse.json({ error: "Skill execution failed", orderId: order.id }, { status: 500 });
+    }
   } catch (err) {
     console.error("[admin/reprocess]", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

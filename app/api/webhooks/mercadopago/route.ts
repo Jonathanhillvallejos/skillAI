@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { executeSkill } from "@/lib/claude-skills";
 import { SkillId } from "@/lib/skills";
 
+export const maxDuration = 300;
+
 const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
 
 export async function POST(req: NextRequest) {
@@ -35,8 +37,8 @@ export async function POST(req: NextRequest) {
       data: { status: "paid", mpPaymentId: paymentId },
     });
 
-    // Ejecutar skill de forma asíncrona (no bloqueamos el webhook)
-    processOrder(orderId, order.skillId as SkillId, order.inputData as Record<string, string>);
+    // Ejecutar skill y esperar resultado (maxDuration = 300s)
+    await processOrder(orderId, order.skillId as SkillId, order.inputData as Record<string, string>);
 
     return NextResponse.json({ ok: true });
   } catch (err) {
