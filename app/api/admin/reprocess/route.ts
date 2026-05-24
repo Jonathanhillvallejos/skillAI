@@ -7,7 +7,7 @@ export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   const secret = req.headers.get("x-admin-secret");
-  if (!secret || secret !== process.env.MP_ACCESS_TOKEN) {
+  if (!secret || secret !== process.env.ADMIN_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

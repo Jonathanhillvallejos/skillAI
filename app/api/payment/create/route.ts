@@ -14,6 +14,8 @@ export async function POST(req: NextRequest) {
 
     const email: string = formData.email?.trim();
     if (!email) return NextResponse.json({ error: "El correo es requerido" }, { status: 400 });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return NextResponse.json({ error: "El correo no tiene un formato válido" }, { status: 400 });
 
     const order = await prisma.order.create({
       data: {

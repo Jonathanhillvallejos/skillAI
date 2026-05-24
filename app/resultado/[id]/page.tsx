@@ -185,6 +185,7 @@ export default function ResultadoPage() {
                     className="w-full border-0"
                     style={{ height: "85vh" }}
                     title="Informe interactivo"
+                    sandbox="allow-scripts allow-downloads allow-popups"
                   />
                 </div>
               </div>

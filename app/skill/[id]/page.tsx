@@ -70,12 +70,13 @@ export default function SkillPage() {
               <form onSubmit={handleSubmit} className="space-y-5">
                 {skill.fields.map((field) => (
                   <div key={field.name}>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                    <label htmlFor={`field-${field.name}`} className="block text-sm font-semibold text-slate-700 mb-1.5">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1">*</span>}
                     </label>
                     {field.type === "textarea" ? (
                       <textarea
+                        id={`field-${field.name}`}
                         rows={3}
                         placeholder={field.placeholder}
                         required={field.required}
@@ -85,6 +86,7 @@ export default function SkillPage() {
                       />
                     ) : (
                       <input
+                        id={`field-${field.name}`}
                         type={field.type}
                         placeholder={field.placeholder}
                         required={field.required}
