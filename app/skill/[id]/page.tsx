@@ -180,11 +180,10 @@ export default function SkillPage() {
             </div>
 
             <div className="text-center">
-              <img
-                src="https://img.shields.io/badge/MercadoPago-Pago%20Seguro-009EE3?style=for-the-badge&logo=mercadopago&logoColor=white"
-                alt="MercadoPago Pago Seguro"
-                className="mx-auto h-7"
-              />
+              <span className="inline-flex items-center gap-2 bg-[#009EE3] text-white text-xs font-bold px-4 py-2 rounded-lg">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                Pago seguro con MercadoPago
+              </span>
             </div>
           </div>
         </div>

@@ -317,13 +317,5 @@ export async function executeSkill(
     return raw.replace(/^```(?:html)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
   }
 
-  const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8192,
-    messages: [{ role: "user", content: "Genera un análisis completo.\n\n" + JSON.stringify(inputData) }],
-  });
-
-  const content = message.content[0];
-  if (content.type !== "text") throw new Error("Respuesta inesperada de Claude");
-  return content.text;
+  throw new Error(`skillId no reconocido: ${skillId}`);
 }

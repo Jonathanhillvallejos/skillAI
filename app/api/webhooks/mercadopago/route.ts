@@ -11,7 +11,7 @@ const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
 
 function verifyMPSignature(req: NextRequest, paymentId: string): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET;
-  if (!secret) return true; // skip until secret is configured in MP dashboard
+  if (!secret) return false;
 
   const sig = req.headers.get("x-signature") ?? "";
   const rid = req.headers.get("x-request-id") ?? "";
