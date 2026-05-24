@@ -5,7 +5,7 @@ import { SkillId } from "@/lib/skills";
 
 export async function POST(req: NextRequest) {
   const secret = req.headers.get("x-admin-secret");
-  if (secret !== process.env.ADMIN_SECRET) {
+  if (!secret || secret !== process.env.MP_ACCESS_TOKEN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
